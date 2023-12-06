@@ -88,6 +88,27 @@ async function getFilteredTable(table, values) {
   return result;
 }
 
+async function getPage(table, queryParams) {
+  const page = queryParams._page || 1;
+  const limit = queryParams._limit || 10;
+
+  delete queryParams._page;
+  delete queryParams._limit;
+
+  let sql = `SELECT * FROM ${table} WHERE `;
+  for (const key in queryParams) {
+    sql += `${table}.${key} = ${queryParams[key]} AND `;
+  }
+  sql = sql.slice(0, -4);
+
+  const offset = (page - 1) * limit;
+  sql += ` LIMIT ${limit} OFFSET ${offset};`;
+
+  console.log("sql --->", sql);
+  const result = await query(sql);
+  return result;
+}
+
 // getFilteredTable
 module.exports = {
   checkUserToken,
@@ -97,4 +118,5 @@ module.exports = {
   addItem,
   getFilteredTable,
   getUser,
+  getPage,
 };

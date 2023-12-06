@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { checkUserToken } = require("../../db/functions");
+const { checkUserToken, getPage } = require("../../db/functions");
 const {
   handleCustomPostRequest,
   isTokenValid,
@@ -42,7 +42,9 @@ router.post("/", async function (req, res) {
       return res.status(400).send("4");
     }
 
-    const response = await getPage("post");
+    const query = req.query;
+    const response = await getPage("post", query);
+
     if (response.length === 0) {
       return res.status(404).send("2");
     } else {
