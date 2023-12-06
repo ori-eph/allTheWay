@@ -1,25 +1,30 @@
-var express = require('express');
-const { param } = require('.');
+var express = require("express");
+const { param } = require(".");
 var router = express.Router();
-const { checkUserToken } = require("../../db/functions")
+const { checkUserToken } = require("../../db/functions");
 
 /* GET users listing. */
-router.post('/', async function (req, res, next) {
+router.post("/", async function (req, res, next) {
     const user = req.body;
+    if (!user) {
+        return res.status(400).send("1");
+    }
     if (await checkUserToken({ token: user.token, user_id: user.user_id })) {
         try {
-            const response = await getItemTable({ user_id: user.user_id, table: "todo" });
+            const response = await getItemTable({
+                user_id: user.user_id,
+                table: "todo",
+            });
             if (response.length === 0) {
-                return res.status(400).send('1');
+                return res.status(404).send("2");
             } else {
-                return res.status(200).send(response)
+                return res.status(200).send(response);
             }
-        }
-        catch (err) {
-            return res.status(500).send('3');
+        } catch (err) {
+            return res.status(500).send("3");
         }
     } else {
-        return res.status(400).send('4');
+        return res.status(400).send("4");
     }
 });
 
@@ -39,7 +44,7 @@ router.delete("/:id", async function (req, res, next) {
         }
 
     } catch (err) {
-        return res.status(500).send("3");
+        return res.status(500).send(3);
     }
 })
 
