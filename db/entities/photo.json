@@ -2,5 +2,7 @@
   "id": "INT PRIMARY KEY AUTO_INCREMENT",
   "title": "VARCHAR(255)",
   "url": "VARCHAR(255)",
+  "album_id": "INT",
+  "deleted_date": "DATE",
   "foreign_keys": [{ "key": "album_id", "ref": "album(id)" }]
 }

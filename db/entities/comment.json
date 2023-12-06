@@ -4,6 +4,7 @@
   "body": "TEXT",
   "post_id": "INT",
   "user_id": "INT",
+  "deleted_date": "DATE",
   "foreign_keys": [
     { "key": "post_id", "ref": "post(id)" },
     { "key": "user_id", "ref": "user(id)" }
