@@ -21,6 +21,7 @@ router.post("/", async function (req, res, next) {
                 return res.status(200).send(response);
             }
         } catch (err) {
+            console.log(err);
             return res.status(500).send("3");
         }
     } else {
@@ -35,22 +36,25 @@ router.delete("/:id", async function (req, res, next) {
     try {
         if (await checkUserToken({ token: user.token, user_id: user.user_id })) {
             if (item.user_id === user.user_id) {
-                updateItem({ id: item_id, deleted_date })
+                updateItem({ id: item_id, deleted_date });
             } else {
-                res.status(400).send()
+                res.status(400).send();
             }
         } else {
-            return res.status(400).send('4');
+            return res.status(400).send("4");
         }
-
     } catch (err) {
+        console.log(err);
         return res.status(500).send(3);
     }
-})
-
+});
 
 function getUserTable() {
     return true;
+}
+
+function getItemTable(obj) {
+    return obj;
 }
 
 module.exports = router;
