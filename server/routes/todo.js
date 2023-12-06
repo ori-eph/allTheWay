@@ -1,7 +1,7 @@
 var express = require("express");
 const { param } = require(".");
 var router = express.Router();
-const { checkUserToken } = require("../../db/functions");
+const { checkUserToken, getItem, addTokenToUser, updateItem, getFilteredTable, addItem } = require("../../db/functions");
 
 /* GET users listing. */
 router.post("/", async function (req, res, next) {
@@ -32,7 +32,7 @@ router.post("/", async function (req, res, next) {
 router.delete("/:id", async function (req, res, next) {
     const item_id = req.params.id;
     const user = req.body;
-    const item = await getItem("todo", item_id);
+    const item = await getItem({ item_id: item_id }, "todo");
     try {
         if (await checkUserToken({ token: user.token, user_id: user.user_id })) {
             if (item.user_id === user.user_id) {
@@ -56,6 +56,15 @@ function getUserTable() {
 function getItemTable(obj) {
     return obj;
 }
+
+router.get("/try", (req, res) => {
+    getItem('todo', 1);
+    addTokenToUser(9);
+    updateItem('todo', { title: "hhhhh" }, 1);
+    addItem('todo', { user_id: 1, title: "ssss" });
+    getFilteredTable('todo', { user_id: 1 });
+    res.send();
+})
 
 module.exports = router;
 

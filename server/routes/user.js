@@ -7,7 +7,7 @@ router.post('/login', async function (req, res, next) {
     return res.status(400).send('1');
   }
   try {
-    const user = await getItem({ username: userInfo.username, password: userInfo.password });
+    const user = await getItem({ username: userInfo.username, password: userInfo.password }, "user");
     if (user.length === 0 || user === false) {
       return res.status(400).send('2');
     }
