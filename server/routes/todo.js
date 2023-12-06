@@ -1,6 +1,7 @@
 var express = require('express');
 const { param } = require('.');
 var router = express.Router();
+const { checkUserToken } = require("../../db/functions")
 
 /* GET users listing. */
 router.post('/:id', async function (req, res, next) {
@@ -23,9 +24,7 @@ router.post('/:id', async function (req, res, next) {
     }
 });
 
-function checkUserToken(token) {
-    return true;
-}
+
 function getUserTable() {
     return true;
 }

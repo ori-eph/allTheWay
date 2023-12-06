@@ -6,8 +6,7 @@ const path = require("path");
 const con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "z10mz10m",
-  database: "allTheWay",
+  password: "z10mz10m"
 });
 
 const resetDatabase = async () => {
@@ -15,12 +14,11 @@ const resetDatabase = async () => {
     // Drop and recreate the database 'allTheWay'
     con.query("DROP DATABASE IF EXISTS allTheWay");
     con.query("CREATE DATABASE allTheWay");
+    con.changeUser({ database: "allTheWay" });
 
     console.log('Database "allTheWay" reset successfully.');
   } catch (error) {
     console.error("Error resetting database:", error);
-  } finally {
-    con.end();
   }
 };
 
@@ -47,9 +45,8 @@ const createTablesFromEntities = async () => {
       const entityData = await fsPromises.readFile(filePath, "utf8");
       const entity = JSON.parse(entityData);
 
-      let createTableQuery = `CREATE TABLE IF NOT EXISTS ${
-        path.parse(file).name
-      } (`;
+      let createTableQuery = `CREATE TABLE IF NOT EXISTS ${path.parse(file).name
+        } (`;
 
       for (const key in entity) {
         if (key !== "foreign_keys") {
@@ -81,8 +78,6 @@ const createTablesFromEntities = async () => {
     console.log("Database tables created successfully.");
   } catch (error) {
     console.error("Error creating tables:", error);
-  } finally {
-    con.end();
   }
 };
 
@@ -97,8 +92,6 @@ const fillTables = async () => {
     console.log("Data inserted into tables successfully.");
   } catch (error) {
     console.error("Error filling tables:", error);
-  } finally {
-    con.end();
   }
 };
 
@@ -251,9 +244,14 @@ async function queryDatabase(query, values) {
   }
 }
 
-// resetDatabase();
-// createTablesFromEntities();
-// fillTables();
+async function resetAllDb() {
+  await resetDatabase();
+  await createTablesFromEntities();
+  await fillTables();
+  con.end();
+}
+
+resetAllDb();
 
 module.exports = {
   mysql,
