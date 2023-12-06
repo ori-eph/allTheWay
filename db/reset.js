@@ -251,7 +251,12 @@ async function resetAllDb() {
   await fillTables();
 }
 
-resetAllDb();
+function keepDb() {
+  con.changeUser({ database: "allTheWay" });
+}
+
+// resetAllDb();
+keepDb();
 
 module.exports = {
   mysql,
