@@ -1,0 +1,5 @@
+{
+  "id": "INT AUTO_INCREMENT PRIMARY KEY",
+  "foreign_keys": [{ "key": "user_id", "ref": "user(id)" }],
+  "token": "INT"
+}
