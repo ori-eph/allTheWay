@@ -2,5 +2,6 @@
   "id": "INT AUTO_INCREMENT PRIMARY KEY",
   "title": "VARCHAR(255)",
   "user_id": "INT",
+  "deleted_date": "DATE",
   "foreign_keys": [{ "key": "user_id", "ref": "user(id)" }]
 }
