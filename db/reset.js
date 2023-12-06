@@ -6,7 +6,7 @@ const path = require("path");
 const con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "z10mz10m"
+  password: "z10mz10m",
 });
 
 const resetDatabase = async () => {
@@ -45,8 +45,9 @@ const createTablesFromEntities = async () => {
       const entityData = await fsPromises.readFile(filePath, "utf8");
       const entity = JSON.parse(entityData);
 
-      let createTableQuery = `CREATE TABLE IF NOT EXISTS ${path.parse(file).name
-        } (`;
+      let createTableQuery = `CREATE TABLE IF NOT EXISTS ${
+        path.parse(file).name
+      } (`;
 
       for (const key in entity) {
         if (key !== "foreign_keys") {
@@ -248,7 +249,6 @@ async function resetAllDb() {
   await resetDatabase();
   await createTablesFromEntities();
   await fillTables();
-  con.end();
 }
 
 resetAllDb();
