@@ -22,7 +22,7 @@ router.put("/:id", async function (req, res) {
   handlePut(req, res, "post");
 });
 
-router.put("/", async function (req, res) {
+router.post("/add", async function (req, res) {
   handleAddItem(req, res, "post");
 });
 
@@ -36,12 +36,13 @@ router.post("/", async function (req, res) {
     }
 
     const isValidToken = await isTokenValid(user);
+    console.log(user, isTokenValid(user));
 
     if (!isValidToken) {
       return res.status(400).send("4");
     }
 
-    const response = await getTable("post");
+    const response = await getPage("post");
     if (response.length === 0) {
       return res.status(404).send("2");
     } else {

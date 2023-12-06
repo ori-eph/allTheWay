@@ -2,9 +2,36 @@ const { con } = require("./reset");
 const util = require("util");
 const query = util.promisify(con.query).bind(con);
 
-function getItem(item, table) {}
+async function getItem(table, id) {
+  let sql = `SELECT * FROM ${table} WHERE ${table}.id = ${id};`;
+  const result = await query(sql);
+  if (result.length) {
+    return result[0];
+  } else {
+    return {};
+  }
+}
 
-function addTokenToUser(id) {}
+async function getUser(user) {
+  let sql = `SELECT * FROM user as u JOIN user_pass as p ON p.user_id = u.id WHERE u.username = ? AND p.password = ?;`;
+  console.log(user);
+  const result = await query(sql, [user.username, user.password]);
+  if (result.length) {
+    return result[0];
+  } else {
+    return {};
+  }
+}
+
+async function addTokenToUser(id) {
+  console.log(id);
+  let num = Math.floor(Math.random() * 10000);
+  console.log("num --->", num);
+  let sql = `INSERT INTO login (user_id, token) VALUES (${id}, '${num}');`;
+  console.log("sql --->", sql);
+  const result = await query(sql);
+  return num;
+}
 
 async function checkUserToken(user) {
   const id = user.user_id;
@@ -14,6 +41,60 @@ async function checkUserToken(user) {
   return result.length > 0;
 }
 
+async function updateItem(table, values, id) {
+  let sql = `UPDATE ${table} SET `;
+  for (const key in values) {
+    sql += `${key} = '${values[key]}' ,`;
+  }
+  sql = sql.slice(0, -1);
+  sql += `WHERE id = ${id};`;
+  console.log("sql --->", sql);
+  await query(sql).insertId;
+  let select = `SELECT * FROM ${table} WHERE ${table}.id = ${id};`;
+  const result = await query(select);
+  if (result.length) {
+    return result[0];
+  } else {
+    return {};
+  }
+}
+
+async function addItem(table, values) {
+  let sql = `INSERT INTO ${table} (`;
+  for (const key in values) {
+    sql += `${key}, `;
+  }
+  sql = sql.slice(0, -2) + ") VALUES (";
+  for (const key in values) {
+    sql += `'${values[key]}', `;
+  }
+  sql = sql.slice(0, -2) + ");";
+  console.log("sql --->", sql);
+  const addQuery = await query(sql);
+  const id = addQuery.insertId;
+  let selectSql = `SELECT * FROM ${table} WHERE id = ? `;
+  const result = await query(selectSql, [id]);
+  return result[0];
+}
+
+async function getFilteredTable(table, values) {
+  let sql = `SELECT * FROM ${table} WHERE `;
+  for (const key in values) {
+    sql += `${table}.${key} = ${values[key]} AND `;
+  }
+  sql = sql.slice(0, -4) + ";";
+  console.log("sql --->", sql);
+  const result = await query(sql);
+  return result;
+}
+
+// getFilteredTable
 module.exports = {
   checkUserToken,
+  getItem,
+  addTokenToUser,
+  updateItem,
+  addItem,
+  getFilteredTable,
+  getUser,
 };

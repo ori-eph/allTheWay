@@ -16,7 +16,7 @@ router.put("/:id", async function (req, res) {
   handlePut(req, res, "comment");
 });
 
-router.put("/", async function (req, res) {
+router.post("/", async function (req, res) {
   handleAddItem(req, res, "comment");
 });
 
