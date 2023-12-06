@@ -39,7 +39,7 @@ router.delete("/:id", async function (req, res, next) {
         }
 
     } catch (err) {
-        return res.status(500).send(3);
+        return res.status(500).send("3");
     }
 })
 
