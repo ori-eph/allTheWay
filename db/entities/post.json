@@ -1,7 +1,7 @@
 {
   "id": "INT AUTO_INCREMENT PRIMARY KEY",
   "title": "VARCHAR(255)",
-  "completed": "TINYINT",
+  "body": "TEXT",
   "user_id": "INT",
   "foreign_keys": [{ "key": "user_id", "ref": "user(id)" }]
 }

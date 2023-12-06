@@ -1,0 +1,11 @@
+{
+  "id": "INT AUTO_INCREMENT PRIMARY KEY",
+  "title": "VARCHAR(255)",
+  "body": "TEXT",
+  "post_id": "INT",
+  "user_id": "INT",
+  "foreign_keys": [
+    { "key": "post_id", "ref": "post(id)" },
+    { "key": "user_id", "ref": "user(id)" }
+  ]
+}
