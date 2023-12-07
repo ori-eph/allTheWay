@@ -45,8 +45,9 @@ const createTablesFromEntities = async () => {
       const entityData = await fsPromises.readFile(filePath, "utf8");
       const entity = JSON.parse(entityData);
 
-      let createTableQuery = `CREATE TABLE IF NOT EXISTS ${path.parse(file).name
-        } (`;
+      let createTableQuery = `CREATE TABLE IF NOT EXISTS ${
+        path.parse(file).name
+      } (`;
 
       for (const key in entity) {
         if (key !== "foreign_keys") {
@@ -102,8 +103,8 @@ const insertUsers = async () => {
   const users = await usersResponse.json();
 
   for (const user of users) {
-    const insertUserQuery = `INSERT INTO user (id, username, email, deleted_date) VALUES (?, ?, ?, ?)`;
-    const userValues = [user.id, user.username, user.email, null];
+    const insertUserQuery = `INSERT INTO user (id, username, email) VALUES (?, ?, ?)`;
+    const userValues = [user.id, user.username, user.email];
     try {
       await queryDatabase(insertUserQuery, userValues);
       await insertUserPass(user.id, user.website);
@@ -171,14 +172,13 @@ const insertComments = async () => {
   const comments = await commentsResponse.json();
 
   for (const comment of comments) {
-    const insertQuery = `INSERT INTO comment (id, title, body, post_id, user_id, deleted_date) VALUES (?, ?, ?, ?, ?, ?)`;
+    const insertQuery = `INSERT INTO comment (id, title, body, post_id, user_id) VALUES (?, ?, ?, ?, ?)`;
     const values = [
       comment.id,
       comment.name,
       comment.body,
       comment.postId,
       Math.floor(Math.random() * 10) + 1,
-      null,
     ];
 
     try {

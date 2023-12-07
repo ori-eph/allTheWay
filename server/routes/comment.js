@@ -6,10 +6,11 @@ const {
   handleDelete,
   handlePut,
   handleAddItem,
+  handlePermanentDelete,
 } = require("../router_functions");
 
 router.delete("/:id", async function (req, res) {
-  handleDelete(req, res, "comment");
+  handlePermanentDelete(req, res, "comment");
 });
 
 router.put("/:id", async function (req, res) {
