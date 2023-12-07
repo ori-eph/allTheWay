@@ -3,7 +3,11 @@ const util = require("util");
 const query = util.promisify(con.query).bind(con);
 
 async function getItem(table, id) {
-  let sql = `SELECT * FROM ${table} WHERE ${table}.id = ${id};`;
+  let sql = `SELECT ${table}.*, user.username, user.email 
+             FROM ${table} 
+             LEFT JOIN user ON ${table}.user_id = user.id 
+             WHERE ${table}.id = ${id};`;
+
   const result = await query(sql);
   if (result.length) {
     return result[0];
@@ -96,6 +100,13 @@ async function getFilteredTable(table, values) {
   return result;
 }
 
+async function getCount(table) {
+  let sql = `SELECT COUNT(*) as count FROM ${table}`;
+  console.log("sql --->", sql);
+  const result = await query(sql);
+  return result[0].count;
+}
+
 async function getPage(table, queryParams) {
   const page = queryParams._page || 1;
   const limit = queryParams._limit || 10;
@@ -103,13 +114,17 @@ async function getPage(table, queryParams) {
   delete queryParams._page;
   delete queryParams._limit;
 
-  let sql = `SELECT * FROM ${table} WHERE `;
+  let sql = `SELECT ${table}.*, user.username 
+             FROM ${table} 
+             LEFT JOIN user ON ${table}.user_id = user.id 
+             WHERE `;
+
   for (const key in queryParams) {
     sql += `${table}.${key} = ${queryParams[key]} AND `;
   }
 
   const offset = (page - 1) * limit;
-  sql += `deleted_date IS NULL LIMIT ${limit} OFFSET ${offset};`;
+  sql += `${table}.deleted_date IS NULL LIMIT ${limit} OFFSET ${offset};`;
 
   console.log("sql --->", sql);
   const result = await query(sql);
@@ -146,4 +161,5 @@ module.exports = {
   getUser,
   getPage,
   deleteItem,
+  getCount,
 };

@@ -1,6 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { checkUserToken, getPage, getItem } = require("../../db/functions");
+const {
+  checkUserToken,
+  getPage,
+  getItem,
+  getCount,
+} = require("../../db/functions");
 const {
   handleCustomPostRequest,
   isTokenValid,
@@ -14,7 +19,6 @@ router.post("/:postId/comment", async function (req, res) {
   const postId = req.params.postId;
   handleCustomPostRequest(req, res, "comment", {
     post_id: postId,
-    deleted_date: null,
   });
 });
 
@@ -24,6 +28,32 @@ router.post("/add", async function (req, res) {
 
 router.delete("/:id", async function (req, res) {
   handleDelete(req, res, "post");
+});
+
+router.post("/count", async function (req, res) {
+  try {
+    const user = req.body;
+
+    if (!user) {
+      return res.status(400).send("1");
+    }
+
+    const isValidToken = await isTokenValid(user);
+
+    if (!isValidToken) {
+      return res.status(400).send("4");
+    }
+
+    const response = await getCount("post");
+    if (response.length === 0) {
+      return res.status(404).send("2");
+    } else {
+      return res.status(200).send(JSON.stringify(response));
+    }
+  } catch (error) {
+    console.error("Error occurred in POST route:", error);
+    return res.status(500).send("3");
+  }
 });
 
 router.post("/:id", async function (req, res) {

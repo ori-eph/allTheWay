@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import TodoItem from "./TodoItem";
 import SearchBar from "../../components/SearchBar";
 import { handleServerRequest } from "../../utils";
-// import "../../css/ToDo.css";
+import "../../css/ToDo.css";
 import { useOutletContext } from "react-router-dom";
 
 function ToDoList() {

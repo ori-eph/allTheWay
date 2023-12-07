@@ -1,0 +1,8 @@
+#userInfo {
+  text-align: center;
+  font-size: larger;
+}
+
+#userInfo > h1 {
+  background-color: rgb(116, 184, 211);
+}
