@@ -15,49 +15,53 @@ function ToDoList() {
 
   useEffect(() => {
     async function getUserList() {
-      return await handleServerRequest(
-        `http://localhost:3000/todo/${currentUser.id}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: {
-            token: currentUser.token,
-            user_id: currentUser.id,
-          },
-        }
-      );
+      return await fetch(`http://localhost:3000/todo/${currentUser.id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token: currentUser.token,
+          user_id: currentUser.id,
+        }),
+      });
     }
 
     async function makeList() {
       try {
         const listTemp = await getUserList();
+        const response = await listTemp.json();
+        if (response) {
+          if (typeof response === "object") {
+            setList(response);
+          } else {
+            switch (response) {
+              case 0:
+                break;
+
+              default:
+                break;
+            }
+          }
+        } else {
+          console.log("response is not defined");
+        }
       } catch (err) {
         setErr(err);
       }
-      switch (listTemp) {
-        case value:
-          break;
-
-        default:
-          break;
-      }
     }
-    setList(listTemp);
-
     makeList();
   }, [currentUser.id]);
 
   async function handleRemoveItem(index, id) {
-    setList((prev) => {
-      return prev.filter((item, i) => i !== index);
-    });
     try {
-      await handleServerRequest(`http://localhost:3000/todos/${id}`, {
+      await fetch(`http://localhost:3000/todo/${id}`, {
         method: "DELETE",
       });
     } catch (err) {
       setErr(err);
     }
+    setList((prev) => {
+      return prev.filter((item, i) => i !== index);
+    });
   }
 
   function handleCheckItem(id) {

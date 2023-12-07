@@ -96,9 +96,6 @@ function Login() {
       {formStatus !== "typing" && (
         <p>{formStatus === "sent" ? "sent" : err?.message || "loading..."}</p>
       )}
-      <hr />
-      <p>or</p>
-      <Link to="/register">Sign up</Link>
     </main>
   );
 }

@@ -7,11 +7,8 @@ import Login from "./Pages/Login";
 import Info from "./Pages/Info";
 import Posts from "./Pages/Posts/Posts";
 import SinglePost from "./Pages/Posts/SinglePost";
-import Register from "./Pages/Register";
 import ToDoList from "./Pages/Todo/ToDoList";
 import NotFound from "./components/NotFound";
-// import Albums from "./Pages/Albums/Albums";
-// import SingleAlbum from "./Pages/Albums/SingleAlbum";
 
 function App() {
   return (
@@ -19,7 +16,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="login" replace />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
         <Route path="home" element={<HomeLayout />}>
           <Route index element={<Home />} />
           <Route path="todos" element={<ToDoList />} />
@@ -27,10 +23,6 @@ function App() {
             <Route index element={<Posts />} />
             <Route path=":postId" element={<SinglePost />} />
           </Route>
-          {/* <Route path="albums">
-            <Route index element={<Albums />} />
-            <Route path=":albumId" element={<SingleAlbum />} />
-          </Route> */}
           <Route path="info" element={<Info />} />
           <Route path="*" element={<NotFound />} />
         </Route>
