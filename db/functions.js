@@ -78,16 +78,16 @@ async function addItem(table, values) {
 }
 
 async function getFilteredTable(table, values) {
-  let sql = `SELECT * FROM ${table} WHERE `;
+  let sql = `SELECT * FROM ${table} as t WHERE `;
   for (const key in values) {
     if (key === "deleted_date") {
       if (values[key] === null) {
         sql += `${table}.${key} IS NULL AND `;
       } else {
-        sql += `${table}.${key} IS NOT NULL AND `;
+        sql += `t.${key} IS NOT NULL AND `;
       }
     } else {
-      sql += `${table}.${key} = ${values[key]} AND `;
+      sql += `t.${key} = ${values[key]} AND `;
     }
   }
   sql = sql.slice(0, -4) + ";";

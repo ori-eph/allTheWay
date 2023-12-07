@@ -29,15 +29,26 @@ function ToDoList() {
       try {
         const listTemp = await getUserList();
         const response = await listTemp.json();
+        console.log(response);
         if (response) {
           if (typeof response === "object") {
             setList(response);
           } else {
             switch (response) {
-              case 0:
+              case 1:
+                console.log("something went wrong with the server");
                 break;
-
-              default:
+              case 2:
+                console.log("todo not found");
+                break;
+              case 3:
+                console.log("something went wrong with the server");
+                break;
+              case 4:
+                console.log("no permission");
+                break;
+              case 5:
+                console.log("no permission");
                 break;
             }
           }
@@ -48,20 +59,51 @@ function ToDoList() {
         setErr(err);
       }
     }
+    console.log("List --->", list);
     makeList();
   }, [currentUser.id]);
 
   async function handleRemoveItem(index, id) {
     try {
-      await fetch(`http://localhost:3000/todo/${id}`, {
+      const deletedTodo = await fetch(`http://localhost:3000/todo/${id}`, {
         method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token: currentUser.token,
+          user_id: currentUser.id,
+        }),
       });
+      const response = await deletedTodo.json();
+      if (response) {
+        if (typeof response === "object") {
+          setList((prev) => {
+            return prev.filter((item, i) => i !== index);
+          });
+        } else {
+          switch (response) {
+            case 1:
+              console.log("something went wrong with the server");
+              break;
+            case 2:
+              console.log("todo not found");
+              break;
+            case 3:
+              console.log("something went wrong with the server");
+              break;
+            case 4:
+              console.log("no permission");
+              break;
+            case 5:
+              console.log("no permission");
+              break;
+          }
+        }
+      } else {
+        console.log("response is not defined");
+      }
     } catch (err) {
       setErr(err);
     }
-    setList((prev) => {
-      return prev.filter((item, i) => i !== index);
-    });
   }
 
   function handleCheckItem(id) {
@@ -95,29 +137,52 @@ function ToDoList() {
     setList(sortedList);
   }
 
+  // ... (other code remains unchanged)
+
   async function addItem(e) {
     e.preventDefault();
     if (!newItem) {
       return;
     }
     const newItemObj = {
-      title: newItem,
-      userId: currentUser.id,
-      completed: false,
+      user: { user_id: currentUser.user_id, token: currentUser.token },
+      item: { title: newItem, completed: 0 },
     };
     setNewItem("");
     try {
-      const savedItem = await handleServerRequest(
-        "http://localhost:3000/todos",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newItemObj),
+      const savedItem = await fetch("http://localhost:3000/todo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newItemObj),
+      });
+      const response = await savedItem.json();
+      if (response) {
+        if (typeof response === "object") {
+          setList((prev) => [...prev, savedItem]);
+        } else {
+          switch (response) {
+            case 1:
+              console.log("something went wrong with the server");
+              break;
+            case 2:
+              console.log("todo not found");
+              break;
+            case 3:
+              console.log("something went wrong with the server");
+              break;
+            case 4:
+              console.log("no permission");
+              break;
+            case 5:
+              console.log("no permission");
+              break;
+          }
         }
-      );
-      setList((prev) => [...prev, savedItem]);
+      } else {
+        console.log("response is not defined");
+      }
     } catch (err) {
       setErr(err);
     }
@@ -138,6 +203,7 @@ function ToDoList() {
                 handleRemoveItem(index, item.id);
               }}
               checkItem={() => handleCheckItem(item.id)}
+              currentUser={currentUser}
             />
           }
         </li>

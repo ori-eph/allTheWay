@@ -45,9 +45,8 @@ const createTablesFromEntities = async () => {
       const entityData = await fsPromises.readFile(filePath, "utf8");
       const entity = JSON.parse(entityData);
 
-      let createTableQuery = `CREATE TABLE IF NOT EXISTS ${
-        path.parse(file).name
-      } (`;
+      let createTableQuery = `CREATE TABLE IF NOT EXISTS ${path.parse(file).name
+        } (`;
 
       for (const key in entity) {
         if (key !== "foreign_keys") {

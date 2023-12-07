@@ -1,14 +1,18 @@
 import { handleServerRequest } from "../../utils";
 // import "../../css/ToDo.css";
 
-function TodoItem({ item, removeItem, checkItem, setErr }) {
+function TodoItem({ item, removeItem, checkItem, setErr, currentUser }) {
   async function handleCheck() {
     checkItem();
     try {
-      await handleServerRequest(`http://localhost:3000/todos/${item.id}`, {
-        method: "PATCH",
+      await fetch(`http://localhost:3000/todo/${item.id}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ completed: !item.completed }),
+        body: JSON.stringify({
+          user_id: currentUser.user_id,
+          token: currentUser.token,
+          completed: item.completed ? 0 : 1,
+        }),
       });
     } catch (err) {
       setErr(err);
