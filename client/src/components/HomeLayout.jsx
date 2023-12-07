@@ -1,6 +1,6 @@
 import { Outlet, Link, useNavigate, NavLink, Navigate } from "react-router-dom";
 import { useState } from "react";
-import "../css/HomeLayout.css";
+// import "../css/HomeLayout.css";
 
 export default function HomeLayout() {
   const navigate = useNavigate();

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { handleServerRequest } from "../utils";
-import "../css/signInSignUp.css";
+// import "../css/signInSignUp.css";
 
 function Login() {
   const [err, setErr] = useState(null);
@@ -23,15 +23,35 @@ function Login() {
     setFormStatus("loading");
     try {
       const foundUser = await handleServerRequest(
-        `http://localhost:3000/users/?username=${formValues.username}&website=${formValues.password}`
+        `http://localhost:3000/user/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: {
+            username: formValues.username,
+            password: formValues.password,
+          },
+        }
       );
-      if (!foundUser.length) {
-        throw Error("username or password not correct");
-      } else {
-        setFormStatus("sent");
-        //log the user in
-        localStorage.setItem("currentUser", JSON.stringify(foundUser[0]));
-        navigate("/home");
+      switch (foundUser) {
+        case "1":
+          console.log("invalid inputs");
+          break;
+        case "2":
+          console.log("user does not exist");
+          throw Error("username or password not correct");
+          break;
+        case "3":
+          console.log("somthing went wrong with the server");
+          break;
+        case Object.keys(foundUser[0]).length > 0:
+          setFormStatus("sent");
+          localStorage.setItem("currentUser", JSON.stringify(foundUser[0]));
+          navigate("/home");
+          break;
+        default:
+          console.log("somthing went wrong with the server");
+          break;
       }
     } catch (err) {
       setFormStatus("error");

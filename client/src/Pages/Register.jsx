@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../css/signInSignUp.css";
+// import "../css/signInSignUp.css";
 import { handleServerRequest } from "../utils";
 
 function Register() {

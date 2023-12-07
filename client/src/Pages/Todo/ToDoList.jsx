@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import TodoItem from "./TodoItem";
 import SearchBar from "../../components/SearchBar";
 import { handleServerRequest } from "../../utils";
-import "../../css/ToDo.css";
+// import "../../css/ToDo.css";
 import { useOutletContext } from "react-router-dom";
 
 function ToDoList() {
@@ -16,19 +16,33 @@ function ToDoList() {
   useEffect(() => {
     async function getUserList() {
       return await handleServerRequest(
-        `http://localhost:3000/users/${currentUser.id}/todos`
+        `http://localhost:3000/todo/${currentUser.id}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: {
+            token: currentUser.token,
+            user_id: currentUser.id,
+          },
+        }
       );
     }
 
     async function makeList() {
       try {
         const listTemp = await getUserList();
-
-        setList(listTemp);
       } catch (err) {
         setErr(err);
       }
+      switch (listTemp) {
+        case value:
+          break;
+
+        default:
+          break;
+      }
     }
+    setList(listTemp);
 
     makeList();
   }, [currentUser.id]);

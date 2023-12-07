@@ -1,5 +1,5 @@
 import { useOutletContext } from "react-router-dom";
-import "../css/Info.css";
+// import "../css/Info.css";
 
 function Info() {
   const [currentUser] = useOutletContext();

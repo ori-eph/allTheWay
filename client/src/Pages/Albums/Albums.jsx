@@ -2,7 +2,7 @@ import SearchBar from "../../components/SearchBar";
 import { useState, useEffect } from "react";
 import { handleServerRequest } from "../../utils";
 import { Outlet, useNavigate, useOutletContext } from "react-router-dom";
-import "../../css/Albums.css";
+// import "../../css/Albums.css";
 
 function Albums() {
   const [searchRes, setSearchRes] = useState(null);
