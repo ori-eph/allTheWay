@@ -45,8 +45,9 @@ const createTablesFromEntities = async () => {
       const entityData = await fsPromises.readFile(filePath, "utf8");
       const entity = JSON.parse(entityData);
 
-      let createTableQuery = `CREATE TABLE IF NOT EXISTS ${path.parse(file).name
-        } (`;
+      let createTableQuery = `CREATE TABLE IF NOT EXISTS ${
+        path.parse(file).name
+      } (`;
 
       for (const key in entity) {
         if (key !== "foreign_keys") {
@@ -196,7 +197,7 @@ const insertTodos = async () => {
   const todos = await todosResponse.json();
 
   for (const todo of todos) {
-    const insertQuery = `INSERT INTO todo (id, title, completed, user_id, deleted_date) VALUES (?, ?, ?, ?, ?)`;
+    const insertQuery = `INSERT INTO todo (id, title, completed, user_id) VALUES (?, ?, ?, ?)`;
     const values = [todo.id, todo.title, todo.completed, todo.userId, null];
 
     try {

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate, useOutletContext } from "react-router-dom";
-import { handleServerRequest } from "../../utils";
+// import { handleServerRequest } from "../../utils";
 // import "../../css/Posts.css";
 import SearchBar from "../../components/SearchBar";
 
@@ -16,10 +16,15 @@ function Posts() {
 
   useEffect(() => {
     const getPosts = async () => {
-      const response = await handleServerRequest(
-        `http://localhost:3000/users/${currentUser.id}/posts`
-      );
-      const data = await response;
+      const response = await fetch(`http://localhost:3000/post`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: currentUser.id,
+          token: currentUser.token,
+        }),
+      });
+      const data = await response.json();
       setPosts(data);
     };
 
@@ -33,7 +38,7 @@ function Posts() {
     }
 
     handlePosts();
-  }, [currentUser.id]);
+  }, [currentUser.id, currentUser.token]);
 
   function handlePostClick(postId) {
     navigate(`${postId}`);

@@ -19,7 +19,10 @@ function SearchBar(props) {
       if (searchParm.current.value === "auto") {
         result = props.list.filter((item) => {
           for (const value of Object.values(item)) {
-            if (value.toString().toLowerCase().includes(search.toLowerCase())) {
+            if (
+              value != null &&
+              value.toString().toLowerCase().includes(search.toLowerCase())
+            ) {
               return true;
             }
           }
