@@ -22,36 +22,36 @@ function Login() {
     setErr(null);
     setFormStatus("loading");
     try {
-      const foundUser = await handleServerRequest(
-        `http://localhost:3000/user/login`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: {
-            username: formValues.username,
-            password: formValues.password,
-          },
+      const foundUser = await fetch(`http://localhost:3000/user/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: formValues.username,
+          password: formValues.password,
+        }),
+      });
+      const response = await foundUser.json();
+      console.log("response --->", response);
+      if (typeof response === "object") {
+        setFormStatus("sent");
+        localStorage.setItem("currentUser", JSON.stringify(response[0]));
+        navigate("/home");
+      } else {
+        switch (response) {
+          case 1:
+            console.log("invalid inputs");
+            break;
+          case 2:
+            console.log("user does not exist");
+            throw Error("username or password not correct");
+            break;
+          case 3:
+            console.log("somthing went wrong with the server");
+            break;
+          default:
+            console.log("somthing went wrong with the server");
+            break;
         }
-      );
-      switch (foundUser) {
-        case "1":
-          console.log("invalid inputs");
-          break;
-        case "2":
-          console.log("user does not exist");
-          throw Error("username or password not correct");
-          break;
-        case "3":
-          console.log("somthing went wrong with the server");
-          break;
-        case Object.keys(foundUser[0]).length > 0:
-          setFormStatus("sent");
-          localStorage.setItem("currentUser", JSON.stringify(foundUser[0]));
-          navigate("/home");
-          break;
-        default:
-          console.log("somthing went wrong with the server");
-          break;
       }
     } catch (err) {
       setFormStatus("error");
