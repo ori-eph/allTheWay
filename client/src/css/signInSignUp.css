@@ -1,0 +1,17 @@
+#login,
+#register {
+  background-color: white;
+  min-width: 300px;
+  text-align: center;
+  position: fixed;
+  top: 20vh;
+  right: 40vw;
+  padding: 1%;
+  border-radius: 0.5em;
+}
+
+#login > form > *,
+#register > form > * {
+  display: block;
+  margin: 3% auto;
+}

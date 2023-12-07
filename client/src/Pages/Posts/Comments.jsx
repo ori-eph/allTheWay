@@ -1,25 +1,34 @@
 import { useRef, useState } from "react";
 import { useEffect } from "react";
 import { handleServerRequest } from "../../utils";
-import { useParams } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import Comment from "./Comment";
 
-function Comments({ comments, setComments }) {
+function Comments({ comments, setComments, handleErr }) {
   const [err, setErr] = useState(null);
   const { postId } = useParams();
+  const [currentUser] = useOutletContext();
   const setCommentsRef = useRef(setComments);
   setCommentsRef.current = setComments;
 
   useEffect(() => {
     async function getComments() {
-      const response = await handleServerRequest(
-        `http://localhost:3000/posts/${postId}/comments`
+      let response = await fetch(
+        `http://localhost:3000/post/${postId}/comment`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: currentUser.id,
+            token: currentUser.token,
+          }),
+        }
       );
-      if (!response.length) {
-        throw new Error("the post was not found");
+      response = await response.json();
+      if (typeof response !== "object") {
+        throw new Error(response);
       } else {
-        const data = await response;
-        setCommentsRef.current(data);
+        setCommentsRef.current(response);
       }
     }
 
@@ -48,12 +57,13 @@ function Comments({ comments, setComments }) {
             <Comment
               key={index}
               index={index}
-              name={comment.name}
+              username={comment.username}
               email={comment.email}
               body={comment.body}
               handleRemoveComment={handleRemoveComment}
               postId={postId}
               id={comment.id}
+              handleErr={handleErr}
             />
           );
         })

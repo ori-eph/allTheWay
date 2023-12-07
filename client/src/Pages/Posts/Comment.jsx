@@ -7,21 +7,32 @@ function Comment(props) {
   const [comment, setComment] = useState({
     postId: props.postId,
     id: props.id,
-    name: props.name,
+    username: props.username,
     email: props.email,
     body: props.body,
   });
   const bodyInput = useRef(props.body);
 
-  function handleEditComment() {
-    fetch(`http://localhost:3000/comments/${props.id}`, {
+  async function handleEditComment() {
+    let result = await fetch(`http://localhost:3000/comments/${props.id}`, {
       headers: { "Content-Type": "application/json" },
-      method: "PATCH",
-      body: JSON.stringify({ body: bodyInput.current.value }),
+      method: "PUT",
+      body: JSON.stringify({
+        user: {
+          user_id: currentUser.user_id,
+          token: currentUser.token,
+        },
+        item: { body: bodyInput.current.value },
+      }),
     });
-    setComment((prev) => {
-      return { ...prev, body: bodyInput.current.value };
-    });
+    result = await result.json();
+    if (typeof result != "object") {
+      props.handleErr(result);
+    } else {
+      setComment((prev) => {
+        return { ...prev, body: bodyInput.current.value };
+      });
+    }
     setToggleEditMode(false);
   }
 
@@ -35,7 +46,7 @@ function Comment(props) {
             className="profile-picture"
           />
           <div className="poster-info">
-            <div className="commentName"> {comment.name} </div>
+            <div className="commentName"> {comment.username} </div>
             <div className="commentEmail"> {comment.email} </div>
           </div>
         </div>

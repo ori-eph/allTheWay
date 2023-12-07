@@ -1,0 +1,64 @@
+#toDoItem {
+  background-color: rgb(223, 225, 229);
+  display: flex;
+  margin: 1%;
+  padding: 1%;
+}
+
+#toDoList {
+  /* list-style-type: none; */
+  width: 85%;
+  margin: auto;
+  margin-bottom: 3%;
+  margin-top: 2%;
+}
+
+#toDoItem > button {
+  margin-left: auto;
+  max-height: 100px;
+  min-width: 75px;
+}
+
+#toDoItem > input {
+  width: 50%;
+  max-width: 80px;
+  min-width: 75px;
+}
+#toDoItem > input[type="checkbox"]:checked {
+  background-color: rgb(78, 135, 175);
+}
+
+#toDoItem > h4 {
+  margin-right: 1%;
+}
+
+h1 {
+  text-align: center;
+}
+
+#list-functions-container {
+  text-align: center;
+}
+
+label {
+  margin-right: 0.2em;
+}
+
+#addItemBtn {
+  background-color: rgb(223, 225, 229);
+  padding: 0.2em 0.4em;
+  margin-left: 1%;
+}
+
+#addItemBtn:hover {
+  background-color: rgb(160, 220, 238);
+}
+
+#emptyToDo {
+  text-align: center;
+  background-color: rgb(220, 220, 220);
+}
+
+.completedItem {
+  text-decoration: line-through;
+}

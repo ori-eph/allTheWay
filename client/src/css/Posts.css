@@ -1,0 +1,183 @@
+#posts-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.middleBtn {
+  margin-left: 2%;
+  text-align: center;
+}
+
+.post-container {
+  width: 20%;
+  height: 30%;
+  margin: 3%;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.post-content {
+  margin: 5%;
+}
+
+.post-container:hover {
+  background-color: rgba(211, 207, 207, 0.616);
+}
+
+#send-icon,
+.check-icon,
+.x-icon {
+  background-color: white;
+  width: 70%;
+}
+
+.commenter-info div {
+  padding-top: 3%;
+}
+
+.commenter-info,
+.comment-header,
+.post-header {
+  display: flex;
+  height: 10%;
+}
+
+.profile-picture {
+  width: 20%;
+}
+
+.commentId {
+  border-top: 1px solid grey;
+  border-right: 1px solid grey;
+  padding: 1%;
+}
+
+.poster-info *,
+#post-title,
+.commenter-info div * {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.734);
+}
+
+#single-post-page-container {
+  width: 45%;
+  height: fit-content;
+  margin: auto;
+}
+
+#comments-container,
+#new-comment-container {
+  margin: 5% auto;
+}
+
+#new-comment-container {
+  border: 1px solid grey;
+}
+
+.single-post-container {
+  margin: auto;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin-top: 6%;
+}
+
+#add-new-post {
+  width: 30%;
+}
+
+#post-body {
+  padding: 3%;
+}
+
+.commentBody {
+  padding: 2%;
+}
+
+.post-title {
+  text-align: center;
+}
+
+.single-post-container,
+#new-comment-container {
+  width: 95%;
+  height: 50%;
+  border: 1px solid rgba(128, 128, 128, 0.734);
+}
+
+.single-post-content,
+.comment-container {
+  border: 1px solid rgba(128, 128, 128, 0.734);
+  margin: 3%;
+}
+
+#comment-button,
+#addComment,
+#send-button,
+.check-button,
+.x-button {
+  width: 8%;
+  margin: 0;
+  margin-left: 5%;
+  padding: 0;
+}
+
+#comment-button:hover,
+#comment-button:focus,
+#comment-button:focus-visible,
+#addComment {
+  border-color: transparent;
+  outline: none;
+  background-color: transparent;
+}
+
+#comment-pic,
+#plus-icon {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+#addComment {
+  font-size: 2rem;
+  margin-left: 4%;
+  padding: 0;
+}
+
+.trash-icon,
+.edit-icon {
+  width: 95%;
+  padding: 0;
+  margin: 0;
+}
+
+.trash-button,
+.edit-button {
+  width: 12%;
+}
+
+.poster-info {
+  margin-top: 4%;
+}
+
+#back-icon {
+  width: 7%;
+}
+
+#post-button {
+  margin-left: 40%;
+}
+
+input.post-title {
+  margin-left: 23%;
+}
+
+input.post-body {
+  width: 90%;
+  margin-left: 4%;
+}
+
+#single-post-content input {
+  border: none;
+}
+
+.back-button {
+  position: fixed;
+}

@@ -191,7 +191,6 @@ async function handleAddItem(req, res, table) {
     const newItem = req.body.item;
 
     if (!user) {
-      console.log("???");
       return res.status(400).send("4");
     }
     if (!newItem) {
@@ -201,7 +200,6 @@ async function handleAddItem(req, res, table) {
     const isValidToken = await isTokenValid(user);
 
     if (!isValidToken) {
-      console.log("not valid???");
       return res.status(400).send("4");
     }
 

@@ -1,6 +1,6 @@
 import { Outlet, Link, useNavigate, NavLink, Navigate } from "react-router-dom";
 import { useState } from "react";
-// import "../css/HomeLayout.css";
+import "../css/HomeLayout.css";
 
 export default function HomeLayout() {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ export default function HomeLayout() {
     <>
       <header>
         <Link id="homeLogo" to="/home">
-          📋usefulApp
+          🤍 marshmallow
         </Link>
         <Link id="info" to="info">
           your Info
@@ -46,12 +46,6 @@ export default function HomeLayout() {
           to="todos"
         >
           Todos
-        </NavLink>
-        <NavLink
-          className={({ isActive }) => (isActive ? "active" : "inactive")}
-          to="albums"
-        >
-          Albums
         </NavLink>
       </nav>
       <div id="homeBody">

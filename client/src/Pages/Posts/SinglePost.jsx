@@ -15,16 +15,18 @@ function SinglePost() {
 
   useEffect(() => {
     async function getPost() {
-      const response = await handleServerRequest(
-        `http://localhost:3000/posts/${postId}`
-      );
-      //   console.log(
-      //     `response: ${JSON.stringify(response)}, length: ${response.length} `
-      //   );
-      if (!JSON.stringify(response).length) {
-        throw new Error("the post was not found");
+      const response = await fetch(`http://localhost:3000/post/${postId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: currentUser.id,
+          token: currentUser.token,
+        }),
+      });
+      const data = await response.json();
+      if (typeof data != "object") {
+        handleErr(data);
       } else {
-        const data = await response;
         setPost(data);
       }
     }
@@ -34,14 +36,38 @@ function SinglePost() {
       try {
         getPost();
       } catch (err) {
-        setErr(err);
-      } finally {
-        // console.log(post);
+        handleErr(err);
       }
     }
 
     handlePost();
   }, [postId]);
+
+  function handleErr(err) {
+    switch (err) {
+      case 1:
+        setErr({ message: "your request was denied" });
+        break;
+      case 2:
+        setErr({ message: "the item was not found." });
+        break;
+      case 3:
+        setErr({
+          message: "something went wrong :/ please try again later.",
+        });
+        break;
+      case 4:
+        setErr({
+          message: "you are logged out. please reload and log back in.",
+        });
+        break;
+      case 5:
+        setErr({
+          message: "you don`t have permission to view this recourse",
+        });
+        break;
+    }
+  }
 
   function enterCommentDetails() {
     if (!toggleNewCommentForm) {
@@ -56,7 +82,7 @@ function SinglePost() {
             alt="profile picture"
           />
           <div>
-            <div> {currentUser.name} </div>
+            <div> {currentUser.username} </div>
             <div> {currentUser.email} </div>
           </div>
         </div>
@@ -84,26 +110,32 @@ function SinglePost() {
   async function handleAddComment() {
     setToggleNewCommentForm(false);
     const newCommentInfo = {
-      postId: `${postId}`,
-      name: `${currentUser.name}`,
-      email: `${currentUser.email}`,
+      post_Id: `${postId}`,
+      user_id: `${currentUser.id}`,
       body: `${commentBody.current.value}`,
     };
-    const result = await fetch(
-      `http://localhost:3000/posts/${postId}/comments`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+    const result = await fetch(`http://localhost:3000/comment`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user: {
+          user_id: currentUser.id,
+          token: currentUser.token,
         },
-        body: JSON.stringify(newCommentInfo),
-      }
-    );
+        item: newCommentInfo,
+      }),
+    });
     const data = await result.json();
-    setComments((prev) => [...prev, data]);
+    if (typeof data != "object") {
+      handleErr(data);
+    } else {
+      setComments((prev) => [...prev, data]);
+    }
   }
 
-  return (
+  return err ? (
+    <p>{err.message}</p>
+  ) : (
     <>
       <Link className="back-button" to="/home/posts">
         <img
@@ -120,10 +152,8 @@ function SinglePost() {
               src="../../../public/profile.jpg"
               alt="profile picture"
             />
-            {/* <div>id: {post?.id}</div> */}
             <div className="poster-info">
-              <div>{currentUser.username}</div>
-              <div>{currentUser.name}</div>
+              <div>{post?.username}</div>
             </div>
           </div>
           <div className="single-post-content">
@@ -162,6 +192,7 @@ function SinglePost() {
             id="comments-container"
             comments={comments}
             setComments={setComments}
+            handleErr={handleErr}
           />
         )}
       </div>

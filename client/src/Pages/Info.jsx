@@ -1,5 +1,5 @@
 import { useOutletContext } from "react-router-dom";
-// import "../css/Info.css";
+import "../css/Info.css";
 
 function Info() {
   const [currentUser] = useOutletContext();
@@ -21,15 +21,6 @@ function Info() {
             <strong>Phone:</strong> {user.phone}
           </p>
         )}
-        {user.address && (
-          <p>
-            <strong>Address: </strong>
-            {user.address?.city}
-          </p>
-        )}
-        <p>
-          <strong>Website:</strong> {user.website}
-        </p>
       </div>
     );
   };

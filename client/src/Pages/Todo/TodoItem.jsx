@@ -1,5 +1,5 @@
 import { handleServerRequest } from "../../utils";
-// import "../../css/ToDo.css";
+import "../../css/ToDo.css";
 
 function TodoItem({ item, removeItem, checkItem, setErr, currentUser }) {
   async function handleCheck() {
