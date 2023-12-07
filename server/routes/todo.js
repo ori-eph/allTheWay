@@ -6,10 +6,11 @@ const {
   handlePut,
   handleCustomPostRequest,
   handleAddItem,
+  handlePermanentDelete,
 } = require("../router_functions");
 
 router.delete("/:id", async function (req, res) {
-  handleDelete(req, res, "todo");
+  handlePermanentDelete(req, res, "todo");
 });
 
 router.put("/:id", async function (req, res) {

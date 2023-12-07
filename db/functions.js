@@ -44,19 +44,19 @@ async function checkUserToken(user) {
 async function updateItem(table, values, id) {
   let sql = `UPDATE ${table} SET `;
   for (const key in values) {
-    sql += `${key} = '${values[key]}' ,`;
+    if (values[key] === null) {
+      sql += `${key} = NULL, `;
+    } else {
+      sql += `${key} = '${values[key]}' , `;
+    }
   }
-  sql = sql.slice(0, -1);
-  sql += `WHERE id = ${id};`;
+  sql = sql.slice(0, -2);
+  sql += ` WHERE id = ${id};`;
   console.log("sql --->", sql);
-  await query(sql).insertId;
+  await query(sql);
   let select = `SELECT * FROM ${table} WHERE ${table}.id = ${id};`;
   const result = await query(select);
-  if (result.length) {
-    return result[0];
-  } else {
-    return {};
-  }
+  return result.length ? result[0] : {};
 }
 
 async function addItem(table, values) {
@@ -80,7 +80,15 @@ async function addItem(table, values) {
 async function getFilteredTable(table, values) {
   let sql = `SELECT * FROM ${table} WHERE `;
   for (const key in values) {
-    sql += `${table}.${key} = ${values[key]} AND `;
+    if (key === "deleted_date") {
+      if (values[key] === null) {
+        sql += `${table}.${key} IS NULL AND `;
+      } else {
+        sql += `${table}.${key} IS NOT NULL AND `;
+      }
+    } else {
+      sql += `${table}.${key} = ${values[key]} AND `;
+    }
   }
   sql = sql.slice(0, -4) + ";";
   console.log("sql --->", sql);
@@ -99,17 +107,35 @@ async function getPage(table, queryParams) {
   for (const key in queryParams) {
     sql += `${table}.${key} = ${queryParams[key]} AND `;
   }
-  sql = sql.slice(0, -4);
 
   const offset = (page - 1) * limit;
-  sql += ` LIMIT ${limit} OFFSET ${offset};`;
+  sql += `deleted_date IS NULL LIMIT ${limit} OFFSET ${offset};`;
 
   console.log("sql --->", sql);
   const result = await query(sql);
   return result;
 }
 
-// getFilteredTable
+async function deleteItem(table, id) {
+  let select = `SELECT * FROM ${table} WHERE ${table}.id = ${id};`;
+  const resultBeforeDeletion = await query(select);
+
+  let sql = `DELETE FROM ${table} WHERE id = ${id};`;
+  console.log("sql --->", sql);
+  await query(sql);
+
+  if (resultBeforeDeletion.length) {
+    const deletedObject = {
+      ...resultBeforeDeletion[0],
+      deleted: true,
+      deleted_date: new Date(),
+    };
+    return deletedObject;
+  } else {
+    return {};
+  }
+}
+
 module.exports = {
   checkUserToken,
   getItem,
@@ -119,4 +145,5 @@ module.exports = {
   getFilteredTable,
   getUser,
   getPage,
+  deleteItem,
 };

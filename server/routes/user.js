@@ -30,4 +30,12 @@ router.post("/:userId/todo", async function (req, res) {
   handleCustomPostRequest(req, res, "todo", { user_id: userId });
 });
 
+router.post("/:userId/post/trashcan", async function (req, res) {
+  const userId = req.params.userId;
+  handleCustomPostRequest(req, res, "post", {
+    deleted_date: "not null",
+    user_id: userId,
+  });
+});
+
 module.exports = router;

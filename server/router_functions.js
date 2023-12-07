@@ -4,6 +4,7 @@ const {
   updateItem,
   checkUserToken,
   addItem,
+  deleteItem,
 } = require("../db/functions");
 const fs = require("fs");
 const fsPromises = require("fs/promises");
@@ -74,6 +75,43 @@ async function handleDelete(req, res, table) {
   }
 }
 
+async function handlePermanentDelete(req, res, table) {
+  try {
+    const itemId = req.params.id;
+    const user = req.body;
+
+    const item = await getItem(table, itemId);
+
+    if (!user) {
+      return res.status(400).send("4");
+    }
+
+    if (Object.keys(item).length === 0) {
+      return res.status(400).send("2");
+    }
+
+    const isValidToken = await isTokenValid(user);
+
+    if (!isValidToken) {
+      return res.status(400).send("4");
+    }
+
+    if (item.user_id != user.user_id) {
+      return res.status(400).send("5");
+    }
+
+    const deletedItem = await deleteItem(table, itemId);
+    if (!Object.keys(deletedItem).length) {
+      return res.status(400).send(2);
+    }
+
+    return res.status(200).send(deletedItem);
+  } catch (error) {
+    console.error("Error occurred in DELETE route:", error);
+    return res.status(500).send("3");
+  }
+}
+
 function formatDate(date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -115,12 +153,45 @@ async function handlePut(req, res, table) {
   }
 }
 
+async function handleRestore(req, res, table) {
+  try {
+    const itemId = req.params.id;
+    const user = req.body;
+
+    const item = await getItem(table, itemId);
+    console.log(item);
+
+    if (!user) {
+      return res.status(400).send("4");
+    }
+    if (Object.keys(item).length === 0) {
+      return res.status(400).send("2");
+    }
+
+    const isValidToken = await isTokenValid(user);
+
+    if (!isValidToken) {
+      return res.status(400).send("4");
+    }
+    if (item.user_id != user.user_id) {
+      return res.status(400).send("5");
+    }
+
+    const updatedItem = await updateItem(table, { deleted_date: null }, itemId);
+    return res.status(200).send(updatedItem);
+  } catch (error) {
+    console.error("Error occurred in RESTORE route:", error);
+    return res.status(500).send("3");
+  }
+}
+
 async function handleAddItem(req, res, table) {
   try {
     const user = req.body.user;
     const newItem = req.body.item;
 
     if (!user) {
+      console.log("???");
       return res.status(400).send("4");
     }
     if (!newItem) {
@@ -130,6 +201,7 @@ async function handleAddItem(req, res, table) {
     const isValidToken = await isTokenValid(user);
 
     if (!isValidToken) {
+      console.log("not valid???");
       return res.status(400).send("4");
     }
 
@@ -182,4 +254,6 @@ module.exports = {
   handlePut,
   handleAddItem,
   isTokenValid,
+  handleRestore,
+  handlePermanentDelete,
 };
